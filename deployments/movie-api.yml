@@ -1,0 +1,41 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+    name: movie-api
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: movie-api
+    template:
+        metadata:
+            labels:
+                app: movie-api
+        spec:
+            containers:
+                - name: movie-api
+                  image: sh4d1/wat-movie-api
+                  imagePullPolicy: Always
+                  command: [
+                      "./wat-movie-api",
+                      "--selector=static",
+                      "--server_address=:8080"
+                  ]
+                  env:
+                    - name: DB_USER
+                      value: "postgres"
+                  ports:
+                      - containerPort: 8080
+                        name: movie-api-port
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: movie-api
+    labels:
+        app: movie-api
+spec:
+    ports:
+        - port: 8080
+    selector:
+        app: movie-api

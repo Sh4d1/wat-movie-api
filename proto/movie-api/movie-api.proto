@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package movie.api;
+
+service MovieAPI {
+    rpc Get(Movie) returns (Response) {}
+}
+
+message Movie {
+    string imdb = 1;
+    string name = 2;
+    uint32 year = 3;
+    string country = 4;
+    string genre = 5;
+    string plot = 6;
+    string rating = 7;
+}
+
+message Response {
+    Movie movie = 1;
+    repeated Movie movies = 2;
+    repeated Error errors = 3;
+}
+
+
+message Error {
+    int32 code = 1;
+    string description = 2;
+}
