@@ -26,6 +26,10 @@
 
 
 [[constraint]]
+  branch = "master"
+  name = "github.com/Sh4d1/wat-user-service"
+
+[[constraint]]
   name = "github.com/golang/protobuf"
   version = "1.0.0"
 
@@ -34,13 +38,13 @@
   version = "0.5.0"
 
 [[constraint]]
+  name = "github.com/micro/kubernetes"
+  version = "0.1.0"
+
+[[constraint]]
   branch = "master"
   name = "golang.org/x/net"
 
 [prune]
   go-tests = true
   unused-packages = true
-
-[[constraint]]
-  name = "github.com/micro/kubernetes"
-  version = "0.1.0"
