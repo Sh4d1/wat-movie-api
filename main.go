@@ -1,15 +1,16 @@
 package main
 
 import (
-	"errors"
 	"log"
 	"os"
+	"strings"
 
 	"golang.org/x/net/context"
 
 	pb "github.com/Sh4d1/wat-movie-api/proto/movie-api"
 	userService "github.com/Sh4d1/wat-user-service/proto/user"
 	micro "github.com/micro/go-micro"
+	"github.com/micro/go-micro/errors"
 	"github.com/micro/go-micro/metadata"
 	"github.com/micro/go-micro/server"
 	k8s "github.com/micro/kubernetes/go/micro"
@@ -47,17 +48,27 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 			return fn(ctx, req, resp)
 		}
 		meta, ok := metadata.FromContext(ctx)
+		log.Println(meta["Authorization"])
 		if !ok {
-			return errors.New("no auth meta-data found in request")
+			return errors.Forbidden("wat.movie.api", "No headers found")
 		}
-		token := meta["Token"]
+		authHeader := meta["Authorization"]
+		if authHeader == "" {
+			return errors.Forbidden("wat.movie.api", "Authorization header required")
+		}
+
+		if !strings.HasPrefix(authHeader, "Bearer ") {
+			return errors.Forbidden("wat.movie.api", "Authorization requires Bearer auth")
+		}
+
+		token := authHeader[len("Bearer "):]
 		log.Println("Authenticating with token: ", token)
 		authClient := userService.NewUserServiceClient("wat.user", srv.Client())
 		_, err := authClient.ValidateToken(ctx, &userService.Token{
 			Token: token,
 		})
 		if err != nil {
-			return err
+			return errors.Forbidden("wat.movie.api", err.Error())
 		}
 		err = fn(ctx, req, resp)
 		return err
