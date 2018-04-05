@@ -48,7 +48,6 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 			return fn(ctx, req, resp)
 		}
 		meta, ok := metadata.FromContext(ctx)
-		log.Println(meta["Authorization"])
 		if !ok {
 			return errors.Forbidden("wat.movie.api", "No headers found")
 		}
@@ -62,7 +61,7 @@ func AuthWrapper(fn server.HandlerFunc) server.HandlerFunc {
 		}
 
 		token := authHeader[len("Bearer "):]
-		log.Println("Authenticating with token: ", token)
+		//log.Println("Authenticating with token: ", token)
 		authClient := userService.NewUserServiceClient("wat.user", srv.Client())
 		_, err := authClient.ValidateToken(ctx, &userService.Token{
 			Token: token,

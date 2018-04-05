@@ -3,14 +3,24 @@ syntax = "proto3";
 package movie.api;
 
 service MovieAPI {
-    rpc Get(Movie) returns (Response) {}
+    rpc Get(GetRequest) returns (Response) {}
+    rpc List(ListRequest) returns (Response) {}
+}
+
+message GetRequest {
+    string name = 1;
+}
+
+message ListRequest {
+    string name = 1;
+    uint32 page = 2;
 }
 
 message Movie {
     string imdb = 1;
     string name = 2;
-    uint32 year = 3;
-    string country = 4;
+    string year = 3;
+    string poster = 4;
     string genre = 5;
     string plot = 6;
     string rating = 7;
