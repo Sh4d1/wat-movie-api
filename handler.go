@@ -63,6 +63,7 @@ type OmdbMovieList struct {
 
 func (s *service) List(ctx context.Context, req *pb.ListRequest, res *pb.Response) error {
 	apiKey := os.Getenv("OMDB_API_KEY")
+	log.Println(apiKey)
 	name := strings.Replace(url.QueryEscape(req.Name), " ", "+", -1)
 	if req.Page == 0 {
 		req.Page = 1
@@ -75,8 +76,7 @@ func (s *service) List(ctx context.Context, req *pb.ListRequest, res *pb.Respons
 		log.Printf("GetReq: ", err)
 		return err
 	}
-	client := &http.Client{}
-
+	client := ProxyAwareHttpClient()
 	resp, err := client.Do(get)
 	if err != nil {
 		log.Printf("Do: ", err)
@@ -112,7 +112,7 @@ func (s *service) List(ctx context.Context, req *pb.ListRequest, res *pb.Respons
 func (s *service) Get(ctx context.Context, req *pb.GetRequest, res *pb.Response) error {
 
 	apiKey := os.Getenv("OMDB_API_KEY")
-
+	log.Println(apiKey)
 	name := strings.Replace(url.QueryEscape(req.Name), " ", "+", -1)
 
 	url := fmt.Sprintf("http://www.omdbapi.com/?t=%s&type=movie&apikey=%s", name, apiKey)
@@ -121,7 +121,7 @@ func (s *service) Get(ctx context.Context, req *pb.GetRequest, res *pb.Response)
 		log.Printf("GetReq: ", err)
 		return err
 	}
-	client := &http.Client{}
+	client := ProxyAwareHttpClient()
 
 	resp, err := client.Do(get)
 	if err != nil {
@@ -163,4 +163,24 @@ func (s *service) Get(ctx context.Context, req *pb.GetRequest, res *pb.Response)
 	//}
 	//res.User = user
 	return nil
+}
+
+func ProxyAwareHttpClient() *http.Client {
+	proxyServer, isSet := os.LookupEnv("GO_HTTP_PROXY")
+	log.Println("ENV:")
+	log.Println(os.Getenv("GO_HTTP_PROXY"))
+	var proxyUrl *url.URL
+	if isSet {
+		log.Println(proxyServer)
+		proxyUrl, err := url.Parse(proxyServer)
+		if err != nil {
+			log.Println("Invalid proxy url ", proxyUrl)
+		}
+	}
+
+	httpTransport := &http.Transport{
+		Proxy: http.ProxyURL(proxyUrl),
+	}
+	httpClient := &http.Client{Transport: httpTransport}
+	return httpClient
 }

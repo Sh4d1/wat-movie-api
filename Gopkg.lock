@@ -224,6 +224,7 @@
     "ipv4",
     "ipv6",
     "lex/httplex",
+    "proxy",
     "trace"
   ]
   revision = "b68f30494add4df6bd8ef5e82803f308e7f7c59c"
@@ -288,6 +289,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "04d75e3058baf062c367c5a314a0091ff9e11d91f27c32acd62bc635f0299faf"
+  inputs-digest = "f90ca04b6ba335e0059c36193956179fc41b855c55fccd652148e912bca93a85"
   solver-name = "gps-cdcl"
   solver-version = 1

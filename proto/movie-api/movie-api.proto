@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package movie.api;
+package movieapi;
 
 service MovieAPI {
     rpc Get(GetRequest) returns (Response) {}

@@ -29,7 +29,7 @@ func main() {
 		)
 	} else {
 		srv = k8s.NewService(
-			micro.Name("wat.movie.api"),
+			micro.Name("wat.movieapi"),
 			micro.WrapHandler(AuthWrapper),
 		)
 	}

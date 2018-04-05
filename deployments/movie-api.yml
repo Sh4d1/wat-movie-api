@@ -12,6 +12,8 @@ spec:
             labels:
                 app: movie-api
         spec:
+            nodeSelector:
+                role: worker
             containers:
                 - name: movie-api
                   image: sh4d1/wat-movie-api
@@ -22,8 +24,13 @@ spec:
                       "--server_address=:8080"
                   ]
                   env:
-                    - name: DB_USER
-                      value: "postgres"
+                    - name: GO_HTTP_PROXY
+                      value: "http://192.168.66.1:8888"
+                    - name: OMDB_API_KEY
+                      valueFrom:
+                          secretKeyRef:
+                              name: movie-api
+                              key: omdb-api-key
                   ports:
                       - containerPort: 8080
                         name: movie-api-port
