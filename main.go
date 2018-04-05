@@ -7,7 +7,7 @@ import (
 
 	"golang.org/x/net/context"
 
-	pb "github.com/Sh4d1/wat-movie-api/proto/movie-api"
+	pb "github.com/Sh4d1/wat-movie-api/proto/movieapi"
 	userService "github.com/Sh4d1/wat-user-service/proto/user"
 	micro "github.com/micro/go-micro"
 	"github.com/micro/go-micro/errors"

@@ -9,7 +9,7 @@ import (
 	"os"
 	"strings"
 
-	pb "github.com/Sh4d1/wat-movie-api/proto/movie-api"
+	pb "github.com/Sh4d1/wat-movie-api/proto/movieapi"
 	"github.com/micro/go-micro/errors"
 	"golang.org/x/net/context"
 )
